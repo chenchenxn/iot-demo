@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IoT 传感器可视化</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>IoT Demo · 实时传感器数据</h1>
+    <p>模拟温湿度发布器 · 每秒采样一次</p>
+  </header>
+
+  <section class="stats">
+    <div class="stat-card">
+      <div class="stat-label">温度</div>
+      <div class="stat-value" id="temp-value">--.-</div>
+      <div class="stat-unit">°C</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">湿度</div>
+      <div class="stat-value" id="humi-value">--.-</div>
+      <div class="stat-unit">%</div>
+    </div>
+  </section>
+
+  <section class="chart-container">
+    <canvas id="sensor-chart"></canvas>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
