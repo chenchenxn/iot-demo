@@ -66,8 +66,16 @@ function formatTime(iso) {
 }
 
 function pushReading(reading) {
-  if (!reading) return;
+  if (!reading) {
+    tempEl.textContent = '等待数据';
+    humiEl.textContent = '等待数据';
+    tempEl.classList.add('waiting');
+    humiEl.classList.add('waiting');
+    return;
+  }
 
+  tempEl.classList.remove('waiting');
+  humiEl.classList.remove('waiting');
   tempEl.textContent = reading.temperature.toFixed(2);
   humiEl.textContent = reading.humidity.toFixed(2);
 

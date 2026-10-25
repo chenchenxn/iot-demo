@@ -1,6 +1,6 @@
 # iot-demo
 
-物联网基础课程 Demo 项目：用 Node.js 模拟温度/湿度传感器发布程序，内置零依赖 HTTP 服务和网页可视化。
+物联网基础课程 Demo 项目：用 Node.js 模拟温度/湿度传感器发布程序，基于 Express 提供网页可视化（最新数值 + 实时折线图）。
 
 无需真实 MQTT 硬件，数据全部在内存中生成、存储。
 
@@ -8,9 +8,9 @@
 
 ```
 iot-demo/
-├── package.json          # NPM 配置
+├── package.json          # NPM 配置（依赖：express）
 ├── publisher.js          # 传感器数据发布模块（独立 CLI 也可被 server 引用）
-├── server.js             # HTTP 服务：提供 API + 静态页面
+├── server.js             # Express 服务：提供 API + 静态页面
 ├── README.md
 └── public/
     ├── index.html        # 可视化页面
@@ -22,12 +22,9 @@ iot-demo/
 
 ### 方式一：Web 可视化模式（推荐）
 
-启动 HTTP 服务，同时自动启动传感器发布器：
-
 ```bash
-node server.js
-# 或
-npm start
+npm install        # 首次运行前安装依赖（express）
+node server.js     # 或 npm start
 ```
 
 启动后打开浏览器访问：
@@ -48,13 +45,19 @@ npm run publisher
 
 按 `Ctrl+C` 退出。
 
+### 网页说明
+
+- 界面为中文，展示**最新温度/湿度数值**和**随时间变化的折线图**，每秒自动更新。
+- 服务刚启动、尚无数据时，页面显示"等待数据"，采集到第一条数据后自动变为数值。
+- 网页展示的即为 publisher.js 实际发布的数据（内存历史记录），无额外模拟数据。
+
 ## API 接口
 
 所有接口返回 JSON，无需鉴权。
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET  | `/api/data`   | 最新一条传感器读数 |
+| GET  | `/api/data`   | 最新一条传感器读数（尚无数据时返回 `null`） |
 | GET  | `/api/history?limit=N` | 最近 N 条历史数据，默认 200，上限 1000 |
 
 单条读数格式：
@@ -69,5 +72,5 @@ npm run publisher
 
 ## 技术栈
 
-- **Node.js 内置模块**：`http`、`fs`、`url`、`path` —— 零 npm 依赖
-- **Chart.js 4**（jsdelivr CDN）—— 前端折线图
+- **Express 5** —— Web 服务框架（唯一 npm 依赖）
+- **Chart.js 4**（jsdelivr CDN）—— 前端折线图，无前端框架

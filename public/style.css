@@ -67,6 +67,12 @@ header p {
   margin-top: 4px;
 }
 
+.stat-value.waiting {
+  font-size: 20px;
+  color: #888;
+  letter-spacing: 2px;
+}
+
 .chart-container {
   background: #232832;
   border-radius: 12px;
