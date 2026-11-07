@@ -3,6 +3,7 @@
 const path = require('path');
 const express = require('express');
 const publisher = require('./publisher');
+const db = require('./db'); // SQLite 历史数据库：提供全部历史记录查询
 
 const app = express();
 const PORT = 3000;
@@ -21,6 +22,11 @@ app.get('/api/history', (req, res) => {
   res.json(publisher.getHistory(limit));
 });
 
+// API：读取 SQLite 中的全部历史传感记录（按入库顺序升序）
+app.get('/api/history/all', (req, res) => {
+  res.json(db.getAllReadings());
+});
+
 // 启动传感器发布器（静默模式，不刷屏）
 publisher.start({ quiet: true });
 
@@ -31,5 +37,6 @@ app.listen(PORT, () => {
 
 process.on('SIGINT', () => {
   publisher.stop();
+  db.closeDatabase(); // 确保退出前 SQLite 连接正常关闭
   process.exit(0);
 });

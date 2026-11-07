@@ -1,5 +1,7 @@
 'use strict';
 
+const db = require('./db'); // SQLite 历史数据库：每条传感器数据持久化
+
 // 内存中保存的历史传感器数据
 const history = [];
 const MAX_HISTORY = 1000; // 最多保留 1000 条
@@ -17,12 +19,15 @@ function generateReading() {
   };
 }
 
-// 将数据存入历史记录（滑动窗口）
+// 将数据存入历史记录（滑动窗口），同时写入 SQLite 持久化
 function storeReading(reading) {
   history.push(reading);
   if (history.length > MAX_HISTORY) {
     history.shift();
   }
+
+  // 每条新生成的传感器数据自动落库
+  db.insertReading(reading);
 }
 
 // 打印一条读取数据
@@ -76,6 +81,7 @@ if (require.main === module) {
   start();
   process.on('SIGINT', () => {
     stop();
+    db.closeDatabase(); // CLI 模式同样落库，退出前需关闭 SQLite 连接
     console.log('\n-----------------------------------');
     console.log(`已停止，共生成 ${history.length} 条历史数据。`);
     process.exit(0);
